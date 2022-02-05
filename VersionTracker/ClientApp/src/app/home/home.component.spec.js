@@ -22,35 +22,55 @@ describe('The home component', function () {
         fixture = testing_2.TestBed.createComponent(home_component_1.HomeComponent);
         component = fixture.componentInstance;
     });
-    it("gets software versions", function () {
-        component.version = "1.2.3";
-        component.getSoftwareVersions();
-        var request = httpMock.expectOne('baseUrl/software/1.2.3');
-        request.flush([{ name: "VS", version: "1.2.3" }]);
-        expect(request.request.method).toBe("GET");
-        expect(component.softwares).toEqual([{ name: "VS", version: "1.2.3" }]);
-        expect(component.message).toEqual("");
-    });
-    describe("when version is invalid", function () {
-        it("given a letter displays error message", function () {
-            component.version = "a";
-            component.getSoftwareVersions();
-            expect(component.message).toBe("Invalid Version Number");
+    describe("when getting software", function () {
+        describe("when version has three numbers", function () {
+            it("gets software versions", function () {
+                component.version = "1.2.3";
+                component.getSoftwareVersions();
+                var request = httpMock.expectOne('baseUrl/software/1.2.3');
+                request.flush([{ name: "VS", version: "1.2.3" }]);
+                expect(request.request.method).toBe("GET");
+                expect(component.softwares).toEqual([{ name: "VS", version: "1.2.3" }]);
+                expect(component.message).toEqual("");
+            });
         });
-        it("given only major version displays error message", function () {
-            component.version = "1";
-            component.getSoftwareVersions();
-            expect(component.message).toBe("Invalid Version Number");
+        describe("when version has two numbers", function () {
+            it("gets software versions", function () {
+                component.version = "1.2";
+                component.getSoftwareVersions();
+                var request = httpMock.expectOne('baseUrl/software/1.2');
+                request.flush([{ name: "VS", version: "1.2.3" }]);
+                expect(request.request.method).toBe("GET");
+                expect(component.softwares).toEqual([{ name: "VS", version: "1.2.3" }]);
+                expect(component.message).toEqual("");
+            });
         });
-        it("given only major and minor version displays error message", function () {
-            component.version = "1.2";
-            component.getSoftwareVersions();
-            expect(component.message).toBe("Invalid Version Number");
+        describe("when version has one number", function () {
+            it("gets software versions", function () {
+                component.version = "1";
+                component.getSoftwareVersions();
+                var request = httpMock.expectOne('baseUrl/software/1');
+                request.flush([{ name: "VS", version: "1.2.3" }]);
+                expect(request.request.method).toBe("GET");
+                expect(component.softwares).toEqual([{ name: "VS", version: "1.2.3" }]);
+                expect(component.message).toEqual("");
+            });
         });
-        it("given four numbers version displays error message", function () {
-            component.version = "1.2.3.4";
-            component.getSoftwareVersions();
-            expect(component.message).toBe("Invalid Version Number");
+        describe("when version is invalid", function () {
+            describe("when version a letter", function () {
+                it("displays error message", function () {
+                    component.version = "a";
+                    component.getSoftwareVersions();
+                    expect(component.message).toBe("Invalid Version Number");
+                });
+            });
+            describe("when version has four numbers", function () {
+                it("displays error message", function () {
+                    component.version = "1.2.3.4";
+                    component.getSoftwareVersions();
+                    expect(component.message).toBe("Invalid Version Number");
+                });
+            });
         });
     });
 });

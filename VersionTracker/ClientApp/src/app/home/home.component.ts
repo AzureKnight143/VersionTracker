@@ -16,7 +16,7 @@ export class HomeComponent{
     @Inject('BASE_URL') private baseUrl: string) { }
 
   getSoftwareVersions(): void {
-    if (this.version && this.version.match(/^(\d+\.)(\d+\.)(\d+)$/)) {
+    if (this.version && this.version.match(/^(\d+\.)?(\d+\.)?(\d+)$/)) {
       this.message = "";
       this.http.get<Software[]>(`${this.baseUrl}software/${this.version}`).subscribe(result => {
         this.softwares = result;

@@ -24,40 +24,63 @@ describe('The home component', () => {
     component = fixture.componentInstance;
   });
 
-  it("gets software versions", () => {
-    component.version = "1.2.3"
-    component.getSoftwareVersions();
-    var request = httpMock.expectOne('baseUrl/software/1.2.3');
-    request.flush([{ name: "VS", version: "1.2.3" }]);
 
-    expect(request.request.method).toBe("GET");
-    expect(component.softwares).toEqual([{ name: "VS", version: "1.2.3" }]);
-    expect(component.message).toEqual("");
-  });
+  describe("when getting software", () => {
+    describe("when version has three numbers", () => {
+      it("gets software versions", () => {
+        component.version = "1.2.3"
+        component.getSoftwareVersions();
+        var request = httpMock.expectOne('baseUrl/software/1.2.3');
+        request.flush([{ name: "VS", version: "1.2.3" }]);
 
-  describe("when version is invalid", () => {
-    it("given a letter displays error message", () => {
-      component.version = "a"
-      component.getSoftwareVersions();
-      expect(component.message).toBe("Invalid Version Number");
+        expect(request.request.method).toBe("GET");
+        expect(component.softwares).toEqual([{ name: "VS", version: "1.2.3" }]);
+        expect(component.message).toEqual("");
+      });
     });
 
-    it("given only major version displays error message", () => {
-      component.version = "1"
-      component.getSoftwareVersions();
-      expect(component.message).toBe("Invalid Version Number");
+    describe("when version has two numbers", () => {
+      it("gets software versions", () => {
+        component.version = "1.2"
+        component.getSoftwareVersions();
+        var request = httpMock.expectOne('baseUrl/software/1.2');
+        request.flush([{ name: "VS", version: "1.2.3" }]);
+
+        expect(request.request.method).toBe("GET");
+        expect(component.softwares).toEqual([{ name: "VS", version: "1.2.3" }]);
+        expect(component.message).toEqual("");
+      });
     });
 
-    it("given only major and minor version displays error message", () => {
-      component.version = "1.2"
-      component.getSoftwareVersions();
-      expect(component.message).toBe("Invalid Version Number");
+    describe("when version has one number", () => {
+      it("gets software versions", () => {
+        component.version = "1"
+        component.getSoftwareVersions();
+        var request = httpMock.expectOne('baseUrl/software/1');
+        request.flush([{ name: "VS", version: "1.2.3" }]);
+
+        expect(request.request.method).toBe("GET");
+        expect(component.softwares).toEqual([{ name: "VS", version: "1.2.3" }]);
+        expect(component.message).toEqual("");
+      });
     });
 
-    it("given four numbers version displays error message", () => {
-      component.version = "1.2.3.4"
-      component.getSoftwareVersions();
-      expect(component.message).toBe("Invalid Version Number");
+    describe("when version is invalid", () => {
+      describe("when version a letter", () => {
+        it("displays error message", () => {
+          component.version = "a"
+          component.getSoftwareVersions();
+          expect(component.message).toBe("Invalid Version Number");
+        });
+      });
+
+      describe("when version has four numbers", () => {
+        it("displays error message", () => {
+          component.version = "1.2.3.4"
+          component.getSoftwareVersions();
+          expect(component.message).toBe("Invalid Version Number");
+        });
+      });
     });
   });
 });
