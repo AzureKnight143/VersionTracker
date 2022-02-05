@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace VersionTracker
+namespace VersionTracker.Models
 {
     public class Software
     {
