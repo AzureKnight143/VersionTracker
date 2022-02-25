@@ -33,27 +33,23 @@ namespace VersionTracker.Controllers
             {
                 var softwareVersionInts = ExtractVersionNumbers(software.Version);
                 return softwareVersionInts[0] > searchVersionInts[0]
-                || (softwareVersionInts[0] == searchVersionInts[0] && softwareVersionInts[1] > searchVersionInts[1])
-                || (softwareVersionInts[0] == searchVersionInts[0] && softwareVersionInts[1] == searchVersionInts[1] && softwareVersionInts[2] > searchVersionInts[2]); ;
+                    || (softwareVersionInts[0] == searchVersionInts[0] && softwareVersionInts[1] > searchVersionInts[1])
+                    || (softwareVersionInts[0] == searchVersionInts[0] && softwareVersionInts[1] == searchVersionInts[1] && softwareVersionInts[2] > searchVersionInts[2]);
             }));
         }
 
         private int[] ExtractVersionNumbers(string version)
         {
-            var intArray = Array.ConvertAll(
+            var defaulArray = new int[] { 0, 0, 0 };
+            var versionArray = Array.ConvertAll(
                     version.Split('.'),
                     s => int.TryParse(s, out var i)
                     ? i
                     : throw new Exception("Not a Number"));
 
+            versionArray.CopyTo(defaulArray, 0);
 
-            var intList = intArray.ToList();
-            while (intList.Count < 3)
-            {
-                intList.Add(0);
-            }
-
-            return intList.ToArray();
+            return defaulArray;
         }
     }
 }
